@@ -137,8 +137,6 @@ def create_triplets_from_hierarchical_classes(X, y, b:int=50):
     triplets = []
     
     labels = np.unique(y)
-    top_labels = np.unique(labels//10) # top level labels
-    low_labels = np.unique(labels% 10) # low level labels
     
     # for each class
     for label in labels:
