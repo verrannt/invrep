@@ -135,19 +135,32 @@ def create_triplets_from_hierarchical_classes(X, y, b:int=50):
     are provided in y.
     """
     triplets = []
-    
+
     labels = np.unique(y)
     
-    # for each class
-    for label in labels:
-        print('Label', label)
-        elems = X[np.argwhere(y==label)][:,0,:][:b]
-        # for all combinations of elems in that class
-        for xi, xj in combinations(elems, 2):
-            # combine with every element from other class(es)
-            for cont_elem in X[np.argwhere(y!=label)][:,0,:]:
-                triplets.append([xi, xj, cont_elem])
-
+    # for each label            
+    for ref in labels:
+        # for each other label in same top class 
+        _same_top_class = labels//10==ref//10
+        for pull in labels[_same_top_class]:
+            if pull == ref:
+                _push_labels = labels != ref # entirely diff class
+            else:
+                _push_labels = labels//10 != ref//10 # diff top class
+            # for each label in other top class
+            for push in labels[_push_labels]:
+                print('Combination', ref, pull, push)
+                # Get <b> random elements for each label
+                ref_elems = X[np.argwhere(y==ref)][:,0,:]
+                ref_elems = ref_elems[np.random.choice(len(ref_elems), b)]
+                pull_elems = X[np.argwhere(y==pull)][:,0,:]
+                pull_elems = pull_elems[np.random.choice(len(pull_elems), b)]
+                push_elems = X[np.argwhere(y==push)][:,0,:]
+                push_elems = push_elems[np.random.choice(len(push_elems), b)]
+                # Add all element combinations
+                for xi, xj, xk in product(ref_elems, pull_elems, push_elems):
+                    triplets.append([xi, xj, xk])
+    """            
     for top_label in top_labels:
         sub_labels = [10*top_label+l for l in low_labels]
         for label1, label2 in combinations(sub_labels, 2):
