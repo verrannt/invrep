@@ -160,21 +160,7 @@ def create_triplets_from_hierarchical_classes(X, y, b:int=50):
                 # Add all element combinations
                 for xi, xj, xk in product(ref_elems, pull_elems, push_elems):
                     triplets.append([xi, xj, xk])
-    """            
-    for top_label in top_labels:
-        sub_labels = [10*top_label+l for l in low_labels]
-        for label1, label2 in combinations(sub_labels, 2):
-            print('Combination', label1, label2)
-            label1_elems = X[np.argwhere(y==label1)][:,0,:][:b]
-            label2_elems = X[np.argwhere(y==label2)][:,0,:][:b]
-            for xi, xj in product(label1_elems, label2_elems):
-                for cont_elem in X[np.argwhere(y//10!=top_label)][:,0,:]:
-                    triplets.append([xi, xj, cont_elem])
-        # this is a list of lists that contain all elements belonging
-        # to a specific subclass (e.g. [[label 10], [label 11], ...]) 
-        #all_top_label_elems = [X[np.argwhere(y==sub_label)][:,0,:][:b] 
-        #                       for sub_label in sub_labels]
-           
+       
     print('Created triplets.')            
     # some additional processing
     print('Casting to numpy array ...')
