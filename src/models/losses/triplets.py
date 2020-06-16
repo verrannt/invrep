@@ -11,7 +11,7 @@ class OnlineTripletLoss(keras.losses.Loss):
         self.margin = margin
         self.squared = squared
     
-    def __call__(self, y_true, y_pred):
+    def __call__(self, y_true, y_pred, sample_weight):
         """
         Params:
         =======
@@ -25,7 +25,7 @@ class OnlineTripletLoss(keras.losses.Loss):
         Rt = self._get_Rt(y_true)
 
         loss = tf.maximum(tf.multiply(Rt, loss+self.margin), 0.0)
-
+        
         n_valid_triplets = tf.reduce_sum(tf.abs(Rt))
         
         # Count number of positive losses
@@ -33,7 +33,7 @@ class OnlineTripletLoss(keras.losses.Loss):
         #    tf.cast(tf.greater(loss, 1e-16), tf.float32))
 
         # Get final mean triplet loss over all valid triplets
-        loss = tf.reduce_sum(loss) / (n_valid_triplets) #(num_positive_triplets + 1e-16)
+        loss = tf.reduce_sum(loss) / (n_valid_triplets)
 
         return loss
     
