@@ -52,8 +52,8 @@ class OnlineTripletLoss(keras.losses.Loss):
                              or l(a)!=l(p) and l(a)!=l(n)
         """
         label_equal = tf.cast(
-            tf.equal(tf.expand_dims(labels, 0), tf.expand_dims(labels, 1)),
-            dtype=tf.float32)
+            K.dot(labels, tf.transpose(labels)),
+            tf.float32)
         i_equal_j = tf.expand_dims(label_equal, 2)
         i_equal_k = tf.expand_dims(label_equal, 1)
 
